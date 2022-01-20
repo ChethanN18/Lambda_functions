@@ -1,0 +1,21 @@
+import boto3
+import os
+
+client = boto3.client('sns')
+ec2_client = boto3.client('ec2')
+sns_arn = os.environ['Sns_env']
+
+def lambda_handler(event, context):
+    event_time = event['time']
+    region = event['region']
+    instance_id = event['detail']['instance-id']
+    sns_body = f"The instance with {instance_id} in the region {region} at {event_time} is stopped"
+    # logic to send email
+    ec2_client.describe_instances(
+        InstanceIds = [instance_id]
+        )
+    client.publish(
+        TopicArn = sns_arn,
+        Subject = "EC2 Stopping alert",
+        Message = sns_body
+    )
