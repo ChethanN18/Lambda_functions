@@ -1,0 +1,16 @@
+#sending alerts when ec2 instances stops using sns,lambda.
+
+import boto3
+
+client = boto3.client('sns')
+def lambda_handler(event, context):
+    event_time = event['time']
+    region = event['region']
+    instance_id = event['detail']['instance-id']
+    sns_body = f"The instance with {instance_id} in the region {region} at {event_time} is stopped"
+    # logic to send email
+    client.publish(
+        TopicArn = "arn:aws:sns:us-east-2:254720845851:my-topic",
+        Subject = "EC2 Stopping alert",
+        Message = sns_body
+    )
