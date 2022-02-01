@@ -15,4 +15,6 @@ import boto3
 client = client.boto3('ec2')
 def lambda_handler(event, context):
     client.terminating_instances(InstanceIds=['i-0acbe9f76efb588d5'])
+    for instance in resp['TerminatingInstances']:
+    print(f"the instance with {instance['InstanceId']} is stopped")
    
