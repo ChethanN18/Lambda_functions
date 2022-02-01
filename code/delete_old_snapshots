@@ -1,0 +1,16 @@
+from datetime import datetime, timedelta, timezone
+
+import boto3
+
+client = boto3.resource('ec2')
+snapshot = client.Snapshot('id')
+
+response = client.snapshots.filter(OwnerIds=['self'])
+
+for snapshot in response:
+    start_time = snapshot.start_time
+    snap_Id = snapshot.snapshot_id
+    print(start_time, snap_Id)
+    delete_time = datetime.now(tz=timezone.utc) - timedelta(days=1)
+    if delete_time > start_time:
+        snapshot.delete()
